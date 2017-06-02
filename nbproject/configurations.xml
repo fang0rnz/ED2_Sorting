@@ -38,6 +38,14 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <standard>10</standard>
+        </cTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="intercala.txt" ex="false" tool="3" flavor2="0">
       </item>

@@ -7,12 +7,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "ordena.h"
 /*
  * 
  */
 int main(int argc, char** argv) {
-    //commit
+    
+    printf("teste");
+    
    return (EXIT_SUCCESS);
 }
 

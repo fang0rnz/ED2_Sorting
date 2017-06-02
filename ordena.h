@@ -1,41 +1,35 @@
-/* 
- * File:   ordena.h
- * Author: gferreira
- *
- * Created on June 2, 2017, 2:35 PM
- */
-
 #ifndef ORDENA_H
 #define	ORDENA_H
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
+  
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h> 
     
-    
-    
-struct arqEntrada{
-    
-};
 
-typedef struct arqEntrada ArqEntradaTipo;
+typedef FILE* ArqEntradaTipo;
 
 int EnchePaginas(int a,ArqEntradaTipo b);
 
 ArqEntradaTipo AbreArqSaida(int a);
 
-void DescarregaPaginas(int n);
+void DescarregaPaginas(ArqEntradaTipo arq);
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low);
 
-void Intercale(ArqEntradaTipo* entrada,int a,ArqEntradaTipo saida);
+void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida);
 
 int Minimo(int low,int high);
 
-void Apague_Arquivo(ArqEntradaTipo* ar);
+void Apague_Arquivo(ArqEntradaTipo fileName);
     
-    
-  
+ArqEntradaTipo abreArquivo(char* fileName);
+
+void OrdeneExterno(); 
+
 #ifdef	__cplusplus
 }
 #endif
