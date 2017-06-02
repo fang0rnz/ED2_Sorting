@@ -3,9 +3,7 @@
 #include <math.h>
 #include "ordena.h"
 
-struct arqEntrada{
-    
-};
+#define REGISTROS 3
 
 typedef struct FILE* ArqEntradaTipo;
 
@@ -62,21 +60,21 @@ void OrdeneExterno(){
     
     ArqEntrada ;//abrir arquivo a ser ordenado;
     
-    do /*Formacao inicial dos NBlocos ordenados */
-        
-    { NBlocos++;
+    do{ /*Formacao inicial dos NBlocos ordenados */
     
-    Fim = EnchePaginas(NBlocos, ArqEntrada);
+        NBlocos++;
     
-    //OrdeneInterno;
+        Fim = EnchePaginas(NBlocos, ArqEntrada);
     
-    ArqSaida = AbreArqSaida(NBlocos);
+        //OrdeneInterno;
     
-    DescarregaPaginas(ArqSaida);
+        ArqSaida = AbreArqSaida(NBlocos);
     
-    fclose(ArqSaida);
+        DescarregaPaginas(ArqSaida);
     
-    } while (!Fim);
+        fclose(ArqSaida);
+    
+    }while(!Fim);
     
     fclose(ArqEntrada);
     
@@ -88,22 +86,21 @@ void OrdeneExterno(){
         
         Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
-    AbreArqEntrada(ArrArqEnt, Low, Lim);
+        AbreArqEntrada(ArrArqEnt, Low, Lim);
     
-    High++;
+        High++;
     
-    ArqSaida = AbreArqSaida(High);
+        ArqSaida = AbreArqSaida(High);
     
-    Intercale(ArrArqEnt, Low, Lim, ArqSaida);
+        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
     
-    fclose(ArqSaida);
+        fclose(ArqSaida);
     
-    for(i= Low; i < Lim; i++){
-        fclose(ArrArqEnt[i]);
+        for(i= Low; i < Lim; i++){
+            fclose(ArrArqEnt[i]);
     
-    Apague_Arquivo(ArrArqEnt[i]);
-    
-    }
+            Apague_Arquivo(ArrArqEnt[i]);
+        }
     
     Low += OrdemIntercalacao;
     
