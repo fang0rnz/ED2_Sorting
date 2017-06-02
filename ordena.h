@@ -11,8 +11,8 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-
+    
+    
     
 struct arqEntrada{
     

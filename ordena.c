@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "ordena.h"
 
 struct arqEntrada{
     
 };
 
-typedef struct arqEntrada ArqEntradaTipo;
+typedef struct FILE* ArqEntradaTipo;
 
 int EnchePaginas(int a,ArqEntradaTipo b);
 
@@ -20,7 +21,27 @@ void Intercale(ArqEntradaTipo* entrada,int a,ArqEntradaTipo saida);
 
 int Minimo(int low,int high);
 
-void Apague_Arquivo(ArqEntradaTipo* ar);
+void Apague_Arquivo(char* fileName){
+    int flag;
+    
+    flag = remove(fileName);
+    
+    if(flag==0){
+        printf("arquivo deletado com sucesso!");
+    }else{
+        printf("erro ao deletar o arquivo.");
+    }
+}
+
+ArqEntradaTipo abreArquivo(char* fileName){
+    FILE* file = fopen(fileName,"r");
+    
+    if(file!=NULL){
+        return file;
+    }
+    
+    printf("arquivo nao localizado ou com falhas");
+}
 
 void OrdeneExterno(){
     int OrdemIntercalacao=2;
