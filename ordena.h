@@ -24,9 +24,9 @@ void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida);
 
 int Minimo(int low,int high);
 
-void Apague_Arquivo(ArqEntradaTipo fileName);
+void ApagaArquivo(char* fileName);//ok
     
-ArqEntradaTipo abreArquivo(char* fileName);
+ArqEntradaTipo abreArquivo(char* fileName);//ok
 
 void OrdeneExterno(); 
 

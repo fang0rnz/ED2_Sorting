@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "ordena.h"
 
 #define REGISTROS 3
@@ -31,10 +32,10 @@ int Minimo(int low,int high){
     
 }
 
-void Apague_Arquivo(ArqEntradaTipo fileName){
+void ApagaArquivo(char* fileName){
     int flag;
     
-    //flag = remove(fileName);
+    flag = remove(fileName);
     
     if(flag==0){
         printf("arquivo deletado com sucesso!");
@@ -111,7 +112,7 @@ void OrdeneExterno(){
         for(i= Low; i < Lim; i++){
             fclose(ArrArqEnt[i]);
     
-            Apague_Arquivo(ArrArqEnt[i]);
+            //Apague_Arquivo(ArrArqEnt[i]);
         }
     
     Low += OrdemIntercalacao;
@@ -120,4 +121,35 @@ void OrdeneExterno(){
     
     //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
     
+}
+
+
+void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
+    FILE* file = abreArquivo(arquivoEntrada);
+    
+    char a;
+    char vet[numeroRegistros];
+    int count=0;
+    
+    int var = 100;
+    
+    while(!feof(file)){
+       fscanf(file,"%c ",&a);//ignora o \n no final
+       vet[count]=a;
+       count++;
+       
+       if(count==numeroRegistros){
+           printf("entrou");
+           var = var + count;
+           char cast = (char)var;
+           file = fopen("teste","w");
+           //fwrite(vet,1,sizeof(char),file);
+           count=0;
+           
+       }
+       //printf("* %c\n",a);
+       printf("rodou\n");
+       
+    }
+    fclose(file);
 }
