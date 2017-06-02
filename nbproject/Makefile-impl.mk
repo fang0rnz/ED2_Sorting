@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=ED2Nolasco_Sartori
+PROJECTNAME=ED2_Sorting
 
 # Active Configuration
 DEFAULTCONF=Debug
