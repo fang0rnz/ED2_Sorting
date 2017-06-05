@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     
     segregaArquivos("arquivoentrada.txt",3);
     
-    printf("%c",103);
+    //printf("%c",103);
     
    return (EXIT_SUCCESS);
 }

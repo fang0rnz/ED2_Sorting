@@ -126,12 +126,15 @@ void OrdeneExterno(){
 
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
     FILE* file = abreArquivo(arquivoEntrada);
-    
+    FILE* output;
     char a;
     char vet[numeroRegistros];
     int count=0;
     
-    int var = 100;
+    int var = numeroRegistros;  //var = numero pra referencia no arquivo
+    
+    char* nome = malloc  (sizeof (char)*30);
+    
     
     while(!feof(file)){
        fscanf(file,"%c ",&a);//ignora o \n no final
@@ -139,17 +142,34 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
        count++;
        
        if(count==numeroRegistros){
-           printf("entrou");
-           var = var + count;
-           char cast = (char)var;
-           file = fopen("teste","w");
-           //fwrite(vet,1,sizeof(char),file);
+           
+           var++;   //seta var sempre o proximo registro de arquivo
+           //char cast = (char)var;
+           sprintf (nome, "arquivo%d",var);
+           output = fopen(nome,"w");
+           fwrite(vet,1,sizeof(vet),output);//escreve todo o vetor de uma vez no arquivo
            count=0;
+           fclose(output);
            
        }
-       //printf("* %c\n",a);
-       printf("rodou\n");
-       
     }
+    
+    //dumpa o resto do buffet
+    var++;
+    sprintf (nome, "arquivo%d",var);
+    output = fopen(nome,"w");
+    
+    int i;
+    for (i = 0; i < count; i++) {
+        a=vet[i];
+        putc(a,output);
+
+    }
+
+    //fecha os arquivos, libera memoria alocada para o nome do arquivo e apaga o arquivo de entrada
+    
+    fclose(output);
     fclose(file);
+    free(nome);
+    //remove(arquivoEntrada);
 }
