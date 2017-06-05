@@ -20,8 +20,19 @@ void DescarregaPaginas(ArqEntradaTipo arq){
     
 }
 
-void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low){
-    
+void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
+    int i;
+    char* nome = malloc  (sizeof (char)*30);
+    FILE* arquivo;
+    printf("%d", lim);
+    for (i=low; i<=lim; i++){
+        sprintf (nome, "arquivo%d",i);
+        printf(nome);
+        arquivo = fopen(nome, "r");
+        ar[i] = arquivo;
+    }
+    fclose(arquivo);
+    free(nome);    
 }
 
 void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida){
@@ -30,7 +41,11 @@ void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida){
 }
 
 int Minimo(int low,int high){
-    
+    if (low<=high)
+        return low;
+    else
+        return high;
+        
 }
 
 void ApagaArquivo(char* fileName){
@@ -72,53 +87,43 @@ void OrdeneExterno(){
     
     NBlocos = 0;
     
-    ArqEntrada ;//abrir arquivo a ser ordenado;
+    segregaArquivos("arquivoentrada.txt", 3, &NBlocos);
     
-    do{ /*Formacao inicial dos NBlocos ordenados */
-    
-        NBlocos++;
-    
-        Fim = EnchePaginas(NBlocos, ArqEntrada);
-    
-        //OrdeneInterno;
-    
-        ArqSaida = AbreArqSaida(NBlocos);
-    
-        DescarregaPaginas(ArqSaida);
-    
-        fclose(ArqSaida);
-    
-    }while(!Fim); //ATÉ AQUI FEIT, ARQUIVOS PRÉ ORDENADOS E INTERCALADOS CRIADOS
-    
-    fclose(ArqEntrada);
+    printf("\n%d", NBlocos);
     
     Low = 0;
     
     High = NBlocos-1;
+    Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
-    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
+    AbreArqEntrada(ArrArqEnt, Low, Lim);
+  
+    
+    
+//    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
+//        
+          
+//        Lim = Minimo(Low + OrdemIntercalacao -1, High);
         
-        Lim = Minimo(Low + OrdemIntercalacao -1, High);
-    
-        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
-    
-        High++;
-    
-        ArqSaida = AbreArqSaida(High);
-    
-        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
-    
-        fclose(ArqSaida);
-    
-        for(i= Low; i < Lim; i++){
-            fclose(ArrArqEnt[i]);
-    
-            //Apague_Arquivo(ArrArqEnt[i]);
-        }
-    
-    Low += OrdemIntercalacao;
-    
-    }
+//        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
+//    
+//        High++;
+//    
+//        ArqSaida = AbreArqSaida(High);
+//    
+//        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
+//    
+//        fclose(ArqSaida);
+//    
+//        for(i= Low; i < Lim; i++){
+//            fclose(ArrArqEnt[i]);
+//    
+//            //Apague_Arquivo(ArrArqEnt[i]);
+//        }
+//    
+//    Low += OrdemIntercalacao;
+//    
+//    }
     
     //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
     
@@ -132,7 +137,7 @@ int comparaRegistro32(const void* a, const void* b){
     return a1.chave-b1.chave;
 }
 
-void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
+void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
     char a;
@@ -192,6 +197,8 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
     //}
     }
     //fecha os arquivos, libera memoria alocada para o nome do arquivo e apaga o arquivo de entrada
+    
+    *NBlocos = var;
     
     fclose(output);
     fclose(file);

@@ -17,23 +17,9 @@ int compare (const void * a, const void * b)
 }
 
 int main(int argc, char** argv) {
-   /*
-   FILE* file = abreArquivo("arquivoentrada.txt");
-   printf("briuu");
-   //Apague_Arquivo("arquivoentrada.txt");
-   
-   printf("ewwww");
-   
-   int values[] = { 40, 10, 100, 90, 20, 25 };
-   
-   int n;
-  qsort (values, 6, sizeof(int),compare);
-  
-  for (n=0; n<6; n++)
-     printf ("%d ",values[n]);
-   */
+
     
-    segregaArquivos("arquivoentrada.txt",3);
+    OrdeneExterno();
     
     //printf("%c",103);
     

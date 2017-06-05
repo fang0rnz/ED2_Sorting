@@ -27,6 +27,8 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low);
 
 void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida);
 
+void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos);
+
 int Minimo(int low,int high);
 
 void ApagaArquivo(char* fileName);//ok
