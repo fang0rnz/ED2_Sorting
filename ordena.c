@@ -40,18 +40,31 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
 }
 
 void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida){
-       Registro32* reg1 = (Registro32 *) malloc(sizeof(Registro32)*3);
-       Registro32* reg2 = (Registro32 *) malloc(sizeof(Registro32)*3);
-       Registro32* regsaida = (Registro32 *) malloc(sizeof(Registro32)*6);
-       fread(reg1, sizeof(Registro32), 3, entrada[a]);
-       fread(reg1, sizeof(Registro32), 3, entrada[b]);
-       fread(regsaida, sizeof(Registro32), 6, saida);
+       Registro32 reg1;
+       Registro32 reg2;
+       Registro32* regsaida;
+       int i, j, count = 0;
+       fseek(entrada[a], 0L, SEEK_END);
+       long sz = ftell(entrada[a]);
+       rewind(entrada[a]);
        
-       while (1){
-           if (reg1[0].chave <= reg2[0].chave)
-               regsaida[0].chave = reg1[0].chave;
-               
+       for (i = 0; i<2; i++){
+           fread(reg1, sizeof(Registro32), 1, entrada[a]);
+       
+          for (j = 0; j<2; j++){
+              fread(reg2, sizeof(Registro32), 1, entrada[b]);
+               if (reg1.chave <= reg2.chave){
+                   regsaida[count] = reg1;
+                   count++;
+               }
+               else {
+                   regsaida[count] = reg2;
+                   count++;
+               }
+           }
        }
+       fwrite(regsaida, sizeof(Registro32), ,saida);
+       
 }
 
 int Minimo(int low,int high){
@@ -137,8 +150,8 @@ void OrdeneExterno(){
    
   
         Intercale(ArrArqEnt, Low, Lim, ArqSaida);
-//    
-//        fclose(ArqSaida);
+    
+        fclose(ArqSaida);
 //    
 //        for(i= Low; i < Lim; i++){
 //            fclose(ArrArqEnt[i]);
