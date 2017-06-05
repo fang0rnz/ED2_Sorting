@@ -26,6 +26,7 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low){
 
 void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida){
     
+    
 }
 
 int Minimo(int low,int high){
@@ -87,7 +88,7 @@ void OrdeneExterno(){
     
         fclose(ArqSaida);
     
-    }while(!Fim);
+    }while(!Fim); //ATÉ AQUI FEIT, ARQUIVOS PRÉ ORDENADOS E INTERCALADOS CRIADOS
     
     fclose(ArqEntrada);
     
@@ -99,7 +100,7 @@ void OrdeneExterno(){
         
         Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
-        AbreArqEntrada(ArrArqEnt, Low, Lim);
+        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
     
         High++;
     
@@ -123,53 +124,79 @@ void OrdeneExterno(){
     
 }
 
+int comparaRegistro32(const void* a, const void* b){
+    Registro32 a1;
+    Registro32 b1;
+    a1 = *(Registro32*)a;
+    b1 = *(Registro32*)b;
+    return a1.chave-b1.chave;
+}
 
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
     char a;
-    char vet[numeroRegistros];
+    Registro32 vet[numeroRegistros];
     int count=0;
     
-    int var = numeroRegistros;  //var = numero pra referencia no arquivo
+    int var = 0;  //var = numero pra referencia no arquivo
     
     char* nome = malloc  (sizeof (char)*30);
     
     
     while(!feof(file)){
-       fscanf(file,"%c ",&a);//ignora o \n no final
-       vet[count]=a;
+       fscanf(file,"%c ",&a);//ignora o \n no final\n
+       vet[count].chave=a;
        count++;
        
        if(count==numeroRegistros){
            
-           var++;   //seta var sempre o proximo registro de arquivo
+           
            //char cast = (char)var;
            sprintf (nome, "arquivo%d",var);
            output = fopen(nome,"w");
-           fwrite(vet,1,sizeof(vet),output);//escreve todo o vetor de uma vez no arquivo
-           count=0;
-           fclose(output);
+           qsort(vet, count, sizeof(Registro32), comparaRegistro32);
+           fwrite(vet,sizeof(Registro32),count,output);//escreve todo o vetor de uma vez no arquivo
            
+           fclose(output);
+           output = fopen(nome,"r");
+           fread(vet,sizeof(Registro32),count,output);
+           int i = 0;
+           for(i=0;i<count;i++)
+           printf("%c",vet[i].chave);
+           count=0;
+           var++;   //seta var sempre o proximo registro de arquivo
+           printf("\n");
        }
     }
     
-    //dumpa o resto do buffet
-    var++;
+    //dumpa o resto do buffer
+    if (count!=0){
+
     sprintf (nome, "arquivo%d",var);
+      var++;  
+    
     output = fopen(nome,"w");
     
-    int i;
-    for (i = 0; i < count; i++) {
-        a=vet[i];
-        putc(a,output);
+    //int i;
+    //for (i = 0; i < count; i++) {
+        //a=vet[i].chave;
+    qsort(vet, count, sizeof(Registro32), comparaRegistro32);
+    fwrite(vet,sizeof(Registro32),count,output);
+        int i;
+        for (i = 0; i < count; i++) {
+            printf("%c",vet[i].chave);
+        }
+        //putc(a,output);
 
+    //}
     }
-
     //fecha os arquivos, libera memoria alocada para o nome do arquivo e apaga o arquivo de entrada
     
     fclose(output);
     fclose(file);
     free(nome);
+
+    
     //remove(arquivoEntrada);
 }
