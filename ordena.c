@@ -24,12 +24,15 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     int i;
     char* nome = malloc  (sizeof (char)*30);
     FILE* arquivo;
-    printf("%d", lim);
     for (i=low; i<=lim; i++){
         sprintf (nome, "arquivo%d",i);
-        printf(nome);
+        printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
         ar[i] = arquivo;
+        Registro32* reg;
+        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
+        fread(reg, sizeof(Registro32), 3, arquivo);
+        printf("\nPrimeira chave do %s eh %c", nome, reg[0].chave);
     }
     fclose(arquivo);
     free(nome);    
@@ -89,7 +92,6 @@ void OrdeneExterno(){
     
     segregaArquivos("arquivoentrada.txt", 3, &NBlocos);
     
-    printf("\n%d", NBlocos);
     
     Low = 0;
     
