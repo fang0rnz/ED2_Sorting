@@ -52,7 +52,7 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int menorlido = 0;
        int turnA = 1;
        int turnB = 1;
-       while (exit<6){
+       while (!feof(entry[a]) && (!feof(entry[b]))){
            if (turnA){
             fread(&reg1, sizeof(Registro32), 1, entry[a]);
             if (feof(entry[a]) && (reg1.chave<reg2.chave)){
