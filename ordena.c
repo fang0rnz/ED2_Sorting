@@ -51,29 +51,33 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int menorlido = 0;
        int turnA = 1;
        int turnB = 1;
-       while (!exit){
+       while (exit<3){
            if (turnA)
             fread(&reg1, sizeof(Registro32), 1, entry[a]);
            if(turnB)
             fread(&reg2, sizeof(Registro32), 1, entry[b]);
            
-           exitreg = MinimoReg32(reg1, reg2);
-           printf("\n%c", exitreg.chave); //printa a menor chave da vez
+           exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
+           printf("\nMENOR CHAVE eh %c", exitreg.chave);
+           printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
            fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
-           exit = 1;
+           exit++;
        }
        
        
        
 }
-Registro32 MinimoReg32 (Registro32 first, Registro32 second){
-    printf("\nentrou aqui? %c %c", first.chave, second.chave);
-    if (first.chave <= second.chave)
+Registro32 MinimoReg32 (Registro32 first, Registro32 second, int *turnA, int *turnB){
+    printf("\nCOMPARANDO %c E %c", first.chave, second.chave);
+    if (first.chave <= second.chave){
+        *turnA = 1; *turnB = 0;
         return first;
-    else
-        printf("\n entrou");
+    }
+    else {
+        *turnA = 0; *turnB = 1;
         return second;
-}
+    }
+    }
 
 int Minimo(int low,int high){
     if (low<=high)

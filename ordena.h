@@ -30,7 +30,7 @@ void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida);
 
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos);
 
-Registro32 MinimoReg32 (Registro32 first, Registro32 second);
+Registro32 MinimoReg32 (Registro32 first, Registro32 second,  int *turnA, int *turnB);
 
 int Minimo(int low,int high);
 
