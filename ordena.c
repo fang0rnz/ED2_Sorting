@@ -46,10 +46,6 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        Registro32 exitreg;
        Registro32 reg1;
        Registro32 reg2;
-       int i, j, count = 0;
-       int sizevector = NREGISTERS(entry[a]);
-       int exit = 0;
-       int menorlido = 0;
        int turnA = 1;
        int turnB = 1;
        while (!feof(entry[a]) && (!feof(entry[b]))){
@@ -75,7 +71,6 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
            printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
            fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
            printf("\nMENOR CHAVE eh %c", exitreg.chave);
-           exit++;
        }
        printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA: ");
        rewind(exitfile);
@@ -158,8 +153,8 @@ void OrdeneExterno(){
     
     
     Low = 0;
-//    
-//    High = NBlocos-1;
+    printf ("%d", NBlocos);
+    High = NBlocos-1;
 //    Lim = Minimo(Low + OrdemIntercalacao -1, High);
 //    
 //    AbreArqEntrada(ArrArqEnt, Low, Lim);
@@ -181,7 +176,7 @@ void OrdeneExterno(){
         
           
        Lim = Minimo(Low + OrdemIntercalacao -1, High);
-        
+        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
     
        High++;
@@ -195,7 +190,7 @@ void OrdeneExterno(){
 //       printf("\n%c\n", reg[0].chave);
        
    
-  
+       printf ("\nIntercale sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
         Intercale(ArrArqEnt, Low, Lim, ArqSaida);
     
         fclose(ArqSaida);
