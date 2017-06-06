@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ordena.h"
 
+#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
 #define REGISTROS 3
 
 typedef FILE* ArqEntradaTipo;
@@ -30,7 +31,7 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     char* nome = malloc  (sizeof (char)*30);
     FILE* arquivo;
     for (i=low; i<=lim; i++){
-        sprintf (nome, "arquivo%d",i);
+        sprintf (nome, "arquivo%d.bin",i);
         printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
         ar[i] = arquivo;
@@ -39,31 +40,11 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     
 }
 
-void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida){
-       Registro32 reg1;
-       Registro32 reg2;
-       Registro32* regsaida;
+void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exit){
+       Registro32* exitregister;
        int i, j, count = 0;
-       fseek(entrada[a], 0L, SEEK_END);
-       long sz = ftell(entrada[a]);
-       rewind(entrada[a]);
-       
-       for (i = 0; i<2; i++){
-           fread(reg1, sizeof(Registro32), 1, entrada[a]);
-       
-          for (j = 0; j<2; j++){
-              fread(reg2, sizeof(Registro32), 1, entrada[b]);
-               if (reg1.chave <= reg2.chave){
-                   regsaida[count] = reg1;
-                   count++;
-               }
-               else {
-                   regsaida[count] = reg2;
-                   count++;
-               }
-           }
-       }
-       fwrite(regsaida, sizeof(Registro32), ,saida);
+       long quantity = NELEMS(entry[a]);
+       printf("%ld", quantity);
        
 }
 
@@ -122,24 +103,27 @@ void OrdeneExterno(){
     High = NBlocos-1;
     Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
-//    AbreArqEntrada(ArrArqEnt, Low, Lim);
-//        Registro32* reg;
-//        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
-//        fread(reg, sizeof(Registro32), 3, ArrArqEnt[1]);
-//        printf("\nPrimeira chave do arquivo eh %c", reg[1].chave);
-//        free(reg);
-    
-    
-    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
+    AbreArqEntrada(ArrArqEnt, Low, Lim);
+        Registro32* reg;
+        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
+        fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
+        printf("\nPrimeira chave do arquivo eh %c", reg[0].chave);
+        free(reg);
         
-          
-       Lim = Minimo(Low + OrdemIntercalacao -1, High);
+        ArqSaida = AbreArqSaida(High);
+        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
+    
+    
+//    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
         
-       AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
-    
-       High++;
-    
-       ArqSaida = AbreArqSaida(High);
+//          
+//       Lim = Minimo(Low + OrdemIntercalacao -1, High);
+//        
+//       AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
+//    
+//       High++;
+//    
+//       ArqSaida = AbreArqSaida(High);
 
 //       Registro32* reg;
 //       reg = (Registro32 *) malloc(sizeof(Registro32)*3);
@@ -149,9 +133,9 @@ void OrdeneExterno(){
        
    
   
-        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
-    
-        fclose(ArqSaida);
+//        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
+//    
+//        fclose(ArqSaida);
 //    
 //        for(i= Low; i < Lim; i++){
 //            fclose(ArrArqEnt[i]);
@@ -165,7 +149,7 @@ void OrdeneExterno(){
     
     //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
     
-    }
+//    }
 }
 
 int comparaRegistro32(const void* a, const void* b){
