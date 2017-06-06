@@ -49,10 +49,14 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int sizevector = NREGISTERS(entry[a]);
        int exit = 0;
        int menorlido = 0;
+       int turnA = 1;
+       int turnB = 1;
        while (!exit){
+           if (turnA)
+            fread(&reg1, sizeof(Registro32), 1, entry[a]);
+           if(turnB)
+            fread(&reg2, sizeof(Registro32), 1, entry[b]);
            
-           fread(&reg1, sizeof(Registro32), 1, entry[a]);
-           fread(&reg2, sizeof(Registro32), 1, entry[b]);
            exitreg = MinimoReg32(reg1, reg2);
            printf("\n%c", exitreg.chave); //printa a menor chave da vez
            fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
