@@ -41,10 +41,20 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     
 }
 
-void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exit){
-       Registro32* exitregister;
+void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
+       Registro32* exitvector;
+       Registro32 reg1;
+       Registro32 reg2;
        int i, j, count = 0;
-       int nRegisters = NREGISTERS(entry[a]);
+       int sizevector = NREGISTERS(entry[a]);
+       int exit = 0;
+       while (!exit && feof){
+           fread(&reg1, sizeof(Registro32), 1, entry[a]);
+           fread(&reg1, sizeof(Registro32), 1, entry[a]);
+           printf("\n registro 1 tem %c de chave", reg1.chave);
+           
+       }
+       
        
        
 }
@@ -105,6 +115,7 @@ void OrdeneExterno(){
     Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
     AbreArqEntrada(ArrArqEnt, Low, Lim);
+    ArqSaida = AbreArqSaida(High+1);
         Registro32* reg;
         reg = (Registro32 *) malloc(sizeof(Registro32)*3);
         fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
@@ -114,7 +125,8 @@ void OrdeneExterno(){
         fseek(ArrArqEnt[0], 0, SEEK_END); // seek to end of file
         int size = ftell(ArrArqEnt[0]); // get current file pointer
         rewind(ArrArqEnt[0]); // seek back to beginning of file
-        printf("\n size is %d bytes", size);                                   // proceed with allocating memory and reading the file
+        printf("\n size is %d bytes", size);
+        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
     
     
 //    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
