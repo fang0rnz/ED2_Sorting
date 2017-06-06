@@ -5,6 +5,7 @@
 #include "ordena.h"
 
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+#define NREGISTERS(x)  (sizeof(x) / 32)
 #define REGISTROS 3
 
 typedef FILE* ArqEntradaTipo;
@@ -43,8 +44,8 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
 void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exit){
        Registro32* exitregister;
        int i, j, count = 0;
-       long quantity = NELEMS(entry[a]);
-       printf("%ld", quantity);
+       int nRegisters = NREGISTERS(entry[a]);
+       
        
 }
 
@@ -108,10 +109,12 @@ void OrdeneExterno(){
         reg = (Registro32 *) malloc(sizeof(Registro32)*3);
         fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
         printf("\nPrimeira chave do arquivo eh %c", reg[0].chave);
+        printf("\n ArrArqEnt tem %d elementos no vetor", NELEMS(ArrArqEnt));
         free(reg);
-        
-        ArqSaida = AbreArqSaida(High);
-        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
+        fseek(ArrArqEnt[0], 0, SEEK_END); // seek to end of file
+        int size = ftell(ArrArqEnt[0]); // get current file pointer
+        rewind(ArrArqEnt[0]); // seek back to beginning of file
+        printf("\n size is %d bytes", size);                                   // proceed with allocating memory and reading the file
     
     
 //    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
