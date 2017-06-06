@@ -51,14 +51,16 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int menorlido = 0;
        int turnA = 1;
        int turnB = 1;
-       while (exit<4){
+       while (exit<6){
            if (turnA){
             fread(&reg1, sizeof(Registro32), 1, entry[a]);
-//            if (feof(entry[a]))
-//                fread(&reg2, sizeof(Registro32), 1, entry[b]);
+            if (feof(entry[a]))
+                fread(&reg2, sizeof(Registro32), 1, entry[b]);
            }
            if(turnB)
             fread(&reg2, sizeof(Registro32), 1, entry[b]);
+                if (feof(entry[b]))
+                fread(&reg1, sizeof(Registro32), 1, entry[a]);
            
            exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
            
