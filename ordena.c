@@ -42,7 +42,7 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
 }
 
 void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
-       Registro32* exitvector;
+       Registro32 exitreg;
        Registro32 reg1;
        Registro32 reg2;
        int i, j, count = 0;
@@ -52,9 +52,10 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        while (!exit){
            
            fread(&reg1, sizeof(Registro32), 1, entry[a]);
-           fread(&reg1, sizeof(Registro32), 1, entry[b]);
-           exitvector[menorlido] = MinimoReg32(reg1, reg2);
-//           printf("%c", exitvector[menorlido].chave);
+           fread(&reg2, sizeof(Registro32), 1, entry[b]);
+           exitreg = MinimoReg32(reg1, reg2);
+           printf("\n%c", exitreg.chave); //printa a menor chave da vez
+           fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
            exit = 1;
        }
        
@@ -62,9 +63,11 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        
 }
 Registro32 MinimoReg32 (Registro32 first, Registro32 second){
+    printf("\nentrou aqui? %c %c", first.chave, second.chave);
     if (first.chave <= second.chave)
         return first;
     else
+        printf("\n entrou");
         return second;
 }
 
