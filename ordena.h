@@ -21,6 +21,7 @@ int EnchePaginas(int a,ArqEntradaTipo b);
 
 ArqEntradaTipo AbreArqSaida(int a);
 
+
 void DescarregaPaginas(ArqEntradaTipo arq);
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low);
@@ -28,6 +29,8 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low);
 void Intercale(ArqEntradaTipo* entrada,int a,int b,ArqEntradaTipo saida);
 
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos);
+
+Registro32 MinimoReg32 (Registro32 first, Registro32 second);
 
 int Minimo(int low,int high);
 
