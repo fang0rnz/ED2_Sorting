@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <limits.h>
 #include "ordena.h"
 
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
@@ -54,14 +55,21 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        while (exit<6){
            if (turnA){
             fread(&reg1, sizeof(Registro32), 1, entry[a]);
-            if (feof(entry[a]))
-                fread(&reg2, sizeof(Registro32), 1, entry[b]);
+            if (feof(entry[a]) && (reg1.chave<reg2.chave)){
+//                printf("\nentrou1\n");
+//                fread(&reg1, sizeof(Registro32), 1, entry[b]);
+                reg1.chave = CHAR_MAX;
+            }
            }
-           if(turnB)
+           if(turnB){
             fread(&reg2, sizeof(Registro32), 1, entry[b]);
-                if (feof(entry[b]))
-                fread(&reg1, sizeof(Registro32), 1, entry[a]);
-           
+                if (feof(entry[b])&&(reg1.chave>reg2.chave)){
+//                    fread(&reg2, sizeof(Registro32), 1, entry[a]);
+//                    printf("\nentrou\n");
+                    reg2.chave = CHAR_MAX;
+                }
+           }
+           printf("\nCOMPARANDO %c & %c", reg1.chave, reg2.chave);
            exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
            
            printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
@@ -88,7 +96,7 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        
 }
 Registro32 MinimoReg32 (Registro32 first, Registro32 second, int *turnA, int *turnB){
-    printf("\nCOMPARANDO %c & %c", first.chave, second.chave);
+    
     if (first.chave <= second.chave){
         *turnA = 1; *turnB = 0;
         return first;
