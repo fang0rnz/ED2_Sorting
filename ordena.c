@@ -31,7 +31,7 @@ void DescarregaPaginas(ArqEntradaTipo arq){
 void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     int i;
     char* nome = malloc  (sizeof (char)*30);
-    FILE* arquivo;
+    ArqEntradaTipo arquivo;
     for (i=low; i<=lim; i++){
         sprintf (nome, "arquivo%d.bin",i);
         printf("\n%s aberto", nome);
@@ -178,7 +178,7 @@ void OrdeneExterno(){
        Lim = Minimo(Low + OrdemIntercalacao -1, High);
         printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
-    
+        printf ("\nDepois AbreArqEnt low=%d, lim=%d, high=%d\n", Low, Lim, High);
        High++;
     
        ArqSaida = AbreArqSaida(High);
