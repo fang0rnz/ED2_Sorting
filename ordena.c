@@ -18,7 +18,7 @@ ArqEntradaTipo AbreArqSaida(int a){
     ArqEntradaTipo arq;
     char* nome = malloc  (sizeof (char)*30);
     sprintf (nome, "arquivo%d.bin",a); 
-    arq = fopen(nome, "w");
+    arq = fopen(nome, "w+");
     return arq;
    
 }
@@ -51,24 +51,42 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int menorlido = 0;
        int turnA = 1;
        int turnB = 1;
-       while (exit<3){
-           if (turnA)
+       while (exit<4){
+           if (turnA){
             fread(&reg1, sizeof(Registro32), 1, entry[a]);
+//            if (feof(entry[a]))
+//                fread(&reg2, sizeof(Registro32), 1, entry[b]);
+           }
            if(turnB)
             fread(&reg2, sizeof(Registro32), 1, entry[b]);
            
            exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
-           printf("\nMENOR CHAVE eh %c", exitreg.chave);
+           
            printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
            fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
+           printf("\nMENOR CHAVE eh %c", exitreg.chave);
            exit++;
        }
+       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA: ");
+       rewind(exitfile);
+      while(!feof(exitfile)){
+           Registro32 reg;
+           printf("%c ", reg.chave);
+           fread(&reg, sizeof(Registro32), 1, exitfile);
+           
+       } 
+//       fclose(exitfile);
+//       FILE*  arqui = fopen("arquivo8.bin", "r");
+//       Registro32 reg;
+//       fread(&reg, sizeof(Registro32), 1, arqui);
+//       printf ("\n%c ", reg.chave);
+ 
        
        
        
 }
 Registro32 MinimoReg32 (Registro32 first, Registro32 second, int *turnA, int *turnB){
-    printf("\nCOMPARANDO %c E %c", first.chave, second.chave);
+    printf("\nCOMPARANDO %c & %c", first.chave, second.chave);
     if (first.chave <= second.chave){
         *turnA = 1; *turnB = 0;
         return first;
