@@ -69,6 +69,16 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     int allUnread = 1;
     
     do{
+        fwrite(&regmin, sizeof(Registro32), 1, exitfile);
+        for (i=0; i<vectorsize; i++){
+            if (i==intmin){
+                fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
+                if (feof(entry[i])){
+                    auxvector[i].chave = CHAR_MAX;
+                }
+            }
+            
+        }
       
         int count = 0;
         for (i=0; i<vectorsize; i++){ //verifica se ja leu ate o final de todos os arquivos
@@ -78,7 +88,7 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
         if (count==vectorsize)
             allUnread = 0;
             
-    }while (allUnread)
+    }while (allUnread);
     
 //    for (i=0; i<vectorsize; i++){
 //        if (auxvector[i].chave < regmin.chave){
