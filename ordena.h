@@ -21,7 +21,7 @@ int EnchePaginas(int a,ArqEntradaTipo b);
 
 ArqEntradaTipo AbreArqSaida(int a);
 
-
+int MinIndex (Registro32* entry, int vectorsize);
 void DescarregaPaginas(ArqEntradaTipo arq);
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int lim,int low);
