@@ -43,6 +43,30 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     }
     
 }
+void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
+    int vectorsize = b-a+1, i;
+    Registro32 auxvector[vectorsize];
+    Registro32 regmin;
+    regmin.chave = CHAR_MAX;
+    int intmin;
+    
+    for (i=0; i<vectorsize; i++){   //Setta todas as chaves do vetor auxiliar para o minimo
+        auxvector[i].chave = CHAR_MIN;
+    }
+    
+    for (i=0; i<vectorsize; i++){
+        if (auxvector[i].chave < regmin.chave){
+            if (feof(entry[i]))
+                auxvector[i].chave = CHAR_MAX;
+            else{
+                fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
+                intmin = i;
+                regmin = auxvector[i];
+            }
+        }
+    }
+    
+}
 
 void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        Registro32 exitreg;
@@ -51,6 +75,7 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int turnA = 1;
        int turnB = 1;
        int exit = 0;
+       printf("\n***%d***\n", b-a+1);
 //       int fimA = feof(entry[b]);
 //       int fimB = feof(entry[b]);
        while (!(feof(entry[0]) && feof(entry[1]))){
@@ -82,12 +107,14 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
 //           fimB = feof(entry[b]);
            printf("\nMENOR CHAVE eh %c", exitreg.chave);
        }
-       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA: ");
+       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
        rewind(exitfile);
       while(!feof(exitfile)){
            Registro32 reg;
            printf("%c ", reg.chave);
            fread(&reg, sizeof(Registro32), 1, exitfile);
+           
+           
            
        } 
  
