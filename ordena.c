@@ -73,15 +73,18 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
         fwrite(&regmin, sizeof(Registro32), 1, exitfile);
         printf("\nSubstituindo registro %c por ", auxvector[intmin].chave);
         fread(&auxvector[intmin], sizeof(Registro32), 1, entry[intmin]);
-        printf("%c na posicao %d do vetor auxiliar", auxvector[intmin].chave, intmin);
         if (feof(entry[intmin])){
             auxvector[intmin].chave = CHAR_MAX;
         }
-        else {
+        printf("%c na posicao %d do vetor auxiliar", auxvector[intmin].chave, intmin);
+//        if (feof(entry[intmin])){
+//            auxvector[intmin].chave = CHAR_MAX;
+//        }
+        
             intmin = MinIndex(auxvector, vectorsize);
             printf("\nNOVO INTMIN VALE %d", intmin );
             regmin = auxvector[intmin];
-        }
+
 
       
         int count = 0;
@@ -89,7 +92,7 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
         for (i=0; i<vectorsize; i++){ //verifica se ja leu ate o final de todos os arquivos
             if (feof(entry[i])){
                 count++;
-                printf("O arquivo de indice [%d] foi lido completamente.", i);
+                printf("\nO arquivo de indice [%d] foi lido completamente.", i);
             }
         }
         printf("\n Quantidade de arquivos que foram lidos completamente: %d", count);
@@ -121,12 +124,14 @@ int MinIndex (Registro32* entry, int vectorsize){
     int menor;
     char aux = CHAR_MAX;
     for (i=0; i<vectorsize; i++){
+        printf("\nCOMPARANDO %c e %c", entry[i].chave, aux);
         if (entry[i].chave <= aux){
-            printf("\nCOMPARANDO %c e %c", entry[i].chave, aux);
+            
             menor = i;
             aux = entry[i].chave;
-            printf("\nO MENOR EH %c DE INDICE %d. AUX AGORA VALE %c", entry[i].chave,menor, aux);
+            
         }
+        printf("\nO MENOR EH %c DE INDICE %d.", aux, menor);
     }
     return menor;
 }
@@ -227,7 +232,7 @@ ArqEntradaTipo abreArquivo(char* fileName){
 }
 
 void OrdeneExterno(){
-    int OrdemIntercalacao=2;
+    int OrdemIntercalacao=3;
     
     int NBlocos = 0;
     
