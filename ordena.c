@@ -70,7 +70,8 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     int contsaida = 0;
     do{
         printf("\nEscrevendo registro %c do arquivo [%d] na posicao [%d] do vetor saida", regmin.chave,intmin, contsaida++);        
-        fwrite(&regmin, sizeof(Registro32), 1, exitfile);
+        if (regmin.chave != CHAR_MAX) //better safe than sorry
+            fwrite(&regmin, sizeof(Registro32), 1, exitfile);
         printf("\nSubstituindo registro %c por ", auxvector[intmin].chave);
         fread(&auxvector[intmin], sizeof(Registro32), 1, entry[intmin]);
         if (feof(entry[intmin])){
@@ -101,6 +102,14 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
             allUnread = 0;
             
     }while (allUnread);
+    
+           printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
+       rewind(exitfile);
+      while(!feof(exitfile)){
+           Registro32 reg;
+           printf("%c ", reg.chave);
+           fread(&reg, sizeof(Registro32), 1, exitfile);
+      }
     
 //    for (i=0; i<vectorsize; i++){
 //        if (auxvector[i].chave < regmin.chave){
@@ -232,7 +241,7 @@ ArqEntradaTipo abreArquivo(char* fileName){
 }
 
 void OrdeneExterno(){
-    int OrdemIntercalacao=3;
+    int OrdemIntercalacao=4;
     
     int NBlocos = 0;
     
