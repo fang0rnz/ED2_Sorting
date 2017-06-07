@@ -45,6 +45,7 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
 }
 void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     int vectorsize = b-a+1, i;
+    printf("\nIntercaleGeral vectorsize: %d", vectorsize);
     Registro32 auxvector[vectorsize];
     Registro32 regmin;
     regmin.chave = CHAR_MAX;
@@ -54,17 +55,46 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
         auxvector[i].chave = CHAR_MIN;
     }
     
+    char aux = CHAR_MAX;
     for (i=0; i<vectorsize; i++){
-        if (auxvector[i].chave < regmin.chave){
-            if (feof(entry[i]))
-                auxvector[i].chave = CHAR_MAX;
-            else{
-                fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
-                intmin = i;
-                regmin = auxvector[i];
-            }
+        fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
+        printf("\nregistro minimo eh %c e o da vez eh %c", regmin.chave, auxvector[i].chave);
+        if (auxvector[i].chave<regmin.chave){
+            regmin = auxvector[i];
+            intmin = i;
         }
+        printf("\n o menor registro eh %c, no arquivo[%d]", regmin.chave, intmin);
     }
+    
+    int allUnread = 1;
+    
+    do{
+      
+        int count = 0;
+        for (i=0; i<vectorsize; i++){ //verifica se ja leu ate o final de todos os arquivos
+            if (feof(entry[i]))
+                count++;   
+        }
+        if (count==vectorsize)
+            allUnread = 0;
+            
+    }while (allUnread)
+    
+//    for (i=0; i<vectorsize; i++){
+//        if (auxvector[i].chave < regmin.chave){
+//            if (feof(entry[i])){
+//                auxvector[i].chave = CHAR_MAX;
+//                intmin = i;
+//                regmin.chave = CHAR_MAX;
+//            }
+//            else{
+//                fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
+//                intmin = i;
+//                regmin = auxvector[i];
+//                printf("\nO INDICE DO VETORARQUIVO COM A MENOR CHAVE EH %d e contem a chave %c", intmin, regmin.chave);
+//            }
+//        }
+//    }
     
 }
 
@@ -187,59 +217,53 @@ void OrdeneExterno(){
     Low = 0;
     printf ("%d", NBlocos);
     High = NBlocos-1;
-//    Lim = Minimo(Low + OrdemIntercalacao -1, High);
+    Lim = Minimo(Low + OrdemIntercalacao -1, High);
+    
+    AbreArqEntrada(ArrArqEnt, Low, Lim);
+    ArqSaida = AbreArqSaida(High+1);
+        Registro32* reg;
+        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
+        fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
+        printf("\nPrimeira chave do arquivo eh %c", reg[0].chave);
+        printf("\n ArrArqEnt tem %d elementos no vetor", NELEMS(ArrArqEnt));
+        free(reg);
+        fseek(ArrArqEnt[0], 0, SEEK_END); // seek to end of file
+        int size = ftell(ArrArqEnt[0]); // get current file pointer
+        rewind(ArrArqEnt[0]); // seek back to beginning of file
+        printf("\n size is %d bytes", size);
+        IntercaleGeral(ArrArqEnt, Low, Lim, ArqSaida);
 //    
-//    AbreArqEntrada(ArrArqEnt, Low, Lim);
-//    ArqSaida = AbreArqSaida(High+1);
-//        Registro32* reg;
-//        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
-//        fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
-//        printf("\nPrimeira chave do arquivo eh %c", reg[0].chave);
-//        printf("\n ArrArqEnt tem %d elementos no vetor", NELEMS(ArrArqEnt));
-//        free(reg);
-//        fseek(ArrArqEnt[0], 0, SEEK_END); // seek to end of file
-//        int size = ftell(ArrArqEnt[0]); // get current file pointer
-//        rewind(ArrArqEnt[0]); // seek back to beginning of file
-//        printf("\n size is %d bytes", size);
+    
+//    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
+//        
+//          
+//       Lim = Minimo(Low + OrdemIntercalacao -1, High);
+//        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
+//       AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
+//        printf ("\nDepois AbreArqEnt low=%d, lim=%d, high=%d\n", Low, Lim, High);
+//       High++;
+//    
+//       ArqSaida = AbreArqSaida(High);
+//
+//   
+//       printf ("\nIntercale sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
 //        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
 //    
-    
-    while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
-        
-          
-       Lim = Minimo(Low + OrdemIntercalacao -1, High);
-        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
-       AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
-        printf ("\nDepois AbreArqEnt low=%d, lim=%d, high=%d\n", Low, Lim, High);
-       High++;
-    
-       ArqSaida = AbreArqSaida(High);
+//        fclose(ArqSaida);
+//        
+//        int count=0;
+//        for(i= Low; i <= Lim; i++){
+//            
+//            fclose(ArrArqEnt[count]);
+//            count++;
+//
+//       } 
 
-//       Registro32* reg;
-//       reg = (Registro32 *) malloc(sizeof(Registro32)*3);
-//       
-//       fread(reg, sizeof(Registro32), 3, ArrArqEnt[1]);
-//       printf("\n%c\n", reg[0].chave);
-       
-   
-       printf ("\nIntercale sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
-        Intercale(ArrArqEnt, Low, Lim, ArqSaida);
-    
-        fclose(ArqSaida);
-        
-        int count=0;
-        for(i= Low; i <= Lim; i++){
-            
-            fclose(ArrArqEnt[count]);
-            count++;
-
-       } 
-
-            //Apague_Arquivo(ArrArqEnt[i]);
-    
-    Low += OrdemIntercalacao;
-    
-    }
+       //Apague_Arquivo(ArrArqEnt[i]);
+//    
+//    Low += OrdemIntercalacao;
+//    
+//    }
     
     //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
     
