@@ -17,9 +17,8 @@ int EnchePaginas(int a,ArqEntradaTipo b){
 
 ArqEntradaTipo AbreArqSaida(int a){
     ArqEntradaTipo arq;
-    //char* nome = malloc  (sizeof (char)*30);
-    char nome[30];
-    snprintf (nome,30, "arquivo%d.bin",a); 
+    char* nome = malloc  (sizeof (char)*30);
+    sprintf (nome, "%d.bin",a); 
     arq = fopen(nome, "w+");
     return arq;
    
@@ -30,17 +29,18 @@ void DescarregaPaginas(ArqEntradaTipo arq){
 }
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
+    printf("\n NA FUNCAO ABREARQUIVO, LOW FOI ENTREGUE COMO %d E LIM COMO %d", low, lim);
     int i;
-    //char* nome = malloc  (sizeof (char)*30);
-    char nome[30];
+    char nome[100];
     ArqEntradaTipo arquivo;
+    int count = 0;
     for (i=low; i<=lim; i++){
-        snprintf (nome,30, "arquivo%d.bin",i);
+        snprintf (nome, 100, "%d.bin", i);
         printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
-        ar[i] = arquivo;
+        ar[count] = arquivo;
+        count++;
     }
-    //free(nome);
     
 }
 
@@ -50,18 +50,23 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        Registro32 reg2;
        int turnA = 1;
        int turnB = 1;
-       while (!feof(entry[a]) && (!feof(entry[b]))){
+       int exit = 0;
+//       int fimA = feof(entry[b]);
+//       int fimB = feof(entry[b]);
+       while (!(feof(entry[0]) && feof(entry[1]))){
+//           fimA = feof(entry[a]);
+//           fimB = feof(entry[b]);
            if (turnA){
-            fread(&reg1, sizeof(Registro32), 1, entry[a]);
-            if (feof(entry[a]) && (reg1.chave<reg2.chave)){
+            fread(&reg1, sizeof(Registro32), 1, entry[0]);
+            if (feof(entry[0]) ){
 //                printf("\nentrou1\n");
 //                fread(&reg1, sizeof(Registro32), 1, entry[b]);
                 reg1.chave = CHAR_MAX;
             }
            }
            if(turnB){
-            fread(&reg2, sizeof(Registro32), 1, entry[b]);
-                if (feof(entry[b])&&(reg1.chave>reg2.chave)){
+            fread(&reg2, sizeof(Registro32), 1, entry[1]);
+                if (feof(entry[1])){
 //                    fread(&reg2, sizeof(Registro32), 1, entry[a]);
 //                    printf("\nentrou\n");
                     reg2.chave = CHAR_MAX;
@@ -71,7 +76,10 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
            exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
            
            printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
-           fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
+           if (exitreg.chave != CHAR_MAX)
+            fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
+//                      fimA = feof(entry[a]);
+//           fimB = feof(entry[b]);
            printf("\nMENOR CHAVE eh %c", exitreg.chave);
        }
        printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA: ");
@@ -82,11 +90,6 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
            fread(&reg, sizeof(Registro32), 1, exitfile);
            
        } 
-//       fclose(exitfile);
-//       FILE*  arqui = fopen("arquivo8.bin", "r");
-//       Registro32 reg;
-//       fread(&reg, sizeof(Registro32), 1, arqui);
-//       printf ("\n%c ", reg.chave);
  
        
        
@@ -196,12 +199,16 @@ void OrdeneExterno(){
         Intercale(ArrArqEnt, Low, Lim, ArqSaida);
     
         fclose(ArqSaida);
-    
+        
+        int count=0;
         for(i= Low; i <= Lim; i++){
-            fclose(ArrArqEnt[i]);
-    
+            
+            fclose(ArrArqEnt[count]);
+            count++;
+
+       } 
+
             //Apague_Arquivo(ArrArqEnt[i]);
-        }
     
     Low += OrdemIntercalacao;
     
@@ -229,8 +236,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     int var = 0;  //var = numero pra referencia no arquivo
     
-    //char* nome = malloc  (sizeof (char)*30);
-    char nome[30];
+    char* nome = malloc  (sizeof (char)*30);
     
     
     while(!feof(file)){
@@ -242,7 +248,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
            
            
            //char cast = (char)var;
-           snprintf (nome,30, "arquivo%d.bin",var);
+           sprintf (nome, "%d.bin",var);
            output = fopen(nome,"w");
            qsort(vet, count, sizeof(Registro32), comparaRegistro32);
            fwrite(vet,sizeof(Registro32),count,output);//escreve todo o vetor de uma vez no arquivo
@@ -262,7 +268,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     //dumpa o resto do buffer
     if (count!=0){
 
-    snprintf (nome,30, "arquivo%d.bin",var);
+    sprintf (nome, "%d.bin",var);
       var++;  
     
     output = fopen(nome,"w");
@@ -286,7 +292,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     fclose(output);
     fclose(file);
-    //free(nome);
+    free(nome);
 
     
     //remove(arquivoEntrada);
