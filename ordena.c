@@ -17,8 +17,9 @@ int EnchePaginas(int a,ArqEntradaTipo b){
 
 ArqEntradaTipo AbreArqSaida(int a){
     ArqEntradaTipo arq;
-    char* nome = malloc  (sizeof (char)*30);
-    sprintf (nome, "arquivo%d.bin",a); 
+    //char* nome = malloc  (sizeof (char)*30);
+    char nome[30];
+    snprintf (nome,30, "arquivo%d.bin",a); 
     arq = fopen(nome, "w+");
     return arq;
    
@@ -30,15 +31,16 @@ void DescarregaPaginas(ArqEntradaTipo arq){
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
     int i;
-    char* nome = malloc  (sizeof (char)*30);
+    //char* nome = malloc  (sizeof (char)*30);
+    char nome[30];
     ArqEntradaTipo arquivo;
     for (i=low; i<=lim; i++){
-        sprintf (nome, "arquivo%d.bin",i);
+        snprintf (nome,30, "arquivo%d.bin",i);
         printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
         ar[i] = arquivo;
     }
-    free(nome);
+    //free(nome);
     
 }
 
@@ -195,7 +197,7 @@ void OrdeneExterno(){
     
         fclose(ArqSaida);
     
-        for(i= Low; i < Lim; i++){
+        for(i= Low; i <= Lim; i++){
             fclose(ArrArqEnt[i]);
     
             //Apague_Arquivo(ArrArqEnt[i]);
@@ -227,7 +229,8 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     int var = 0;  //var = numero pra referencia no arquivo
     
-    char* nome = malloc  (sizeof (char)*30);
+    //char* nome = malloc  (sizeof (char)*30);
+    char nome[30];
     
     
     while(!feof(file)){
@@ -239,7 +242,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
            
            
            //char cast = (char)var;
-           sprintf (nome, "arquivo%d.bin",var);
+           snprintf (nome,30, "arquivo%d.bin",var);
            output = fopen(nome,"w");
            qsort(vet, count, sizeof(Registro32), comparaRegistro32);
            fwrite(vet,sizeof(Registro32),count,output);//escreve todo o vetor de uma vez no arquivo
@@ -259,7 +262,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     //dumpa o resto do buffer
     if (count!=0){
 
-    sprintf (nome, "arquivo%d.bin",var);
+    snprintf (nome,30, "arquivo%d.bin",var);
       var++;  
     
     output = fopen(nome,"w");
@@ -283,7 +286,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     fclose(output);
     fclose(file);
-    free(nome);
+    //free(nome);
 
     
     //remove(arquivoEntrada);
