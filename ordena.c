@@ -5,9 +5,13 @@
 #include <limits.h>
 #include "ordena.h"
 
-#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
-#define NREGISTERS(x)  (sizeof(x) / 32)
+//#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+//#define NREGISTERS(x)  (sizeof(x) / 32)
+
+
+
 #define REGISTROS 3
+#define ARQ_ENTRADA "arquivoentrada.txt"
 
 typedef FILE* ArqEntradaTipo;
 
@@ -15,13 +19,30 @@ int EnchePaginas(int a,ArqEntradaTipo b){
     
 }
 
+//nao fecha o arquivo, mas a funçao so e chamada uma vez e o fecha
 ArqEntradaTipo AbreArqSaida(int a){
     ArqEntradaTipo arq;
-    char* nome = malloc  (sizeof (char)*30);
-    sprintf (nome, "%d.bin",a); 
+    //char* nome = malloc  (sizeof (char)*30);
+    char nome[30];
+    snprintf (nome,30, "%d.bin",a); 
     arq = fopen(nome, "w+");
     return arq;
    
+}
+
+void deletaArquivos(int a){
+    char nome[30];
+    snprintf (nome,30, "%d.bin",a);
+    
+    int flag;
+    
+    flag = remove(nome);
+    
+    if(flag==0){
+        printf("arquivo deletado com sucesso!");
+    }else{
+        printf("erro ao deletar o arquivo.");
+    }
 }
 
 void DescarregaPaginas(ArqEntradaTipo arq){
@@ -39,9 +60,8 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
         printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
         ar[count] = arquivo;
-        count++;
+        count++;   
     }
-    
 }
 void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     int vectorsize = b-a+1, i;
@@ -257,7 +277,7 @@ void OrdeneExterno(){
     
     NBlocos = 0;
     
-    segregaArquivos("arquivoentrada.txt", 3, &NBlocos);
+    segregaArquivos(ARQ_ENTRADA, REGISTROS, &NBlocos);
     
     
     Low = 0;
@@ -301,6 +321,7 @@ void OrdeneExterno(){
         for(i= Low; i <= Lim; i++){
             
             fclose(ArrArqEnt[count]);
+            deletaArquivos(i);
             count++;
 
        } 
@@ -315,6 +336,7 @@ void OrdeneExterno(){
 
 }
 
+//nao manipula ponteiro
 int comparaRegistro32(const void* a, const void* b){
     Registro32 a1;
     Registro32 b1;
@@ -323,6 +345,7 @@ int comparaRegistro32(const void* a, const void* b){
     return a1.chave-b1.chave;
 }
 
+//abre 2 arquivos e fecha os dois
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
@@ -332,7 +355,8 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     int var = 0;  //var = numero pra referencia no arquivo
     
-    char* nome = malloc  (sizeof (char)*30);
+    //char* nome = malloc  (sizeof (char)*30);
+    char nome[30];
     
     
     while(!feof(file)){
@@ -344,7 +368,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
            
            
            //char cast = (char)var;
-           sprintf (nome, "%d.bin",var);
+           snprintf (nome,30, "%d.bin",var);
            output = fopen(nome,"w");
            qsort(vet, count, sizeof(Registro32), comparaRegistro32);
            fwrite(vet,sizeof(Registro32),count,output);//escreve todo o vetor de uma vez no arquivo
@@ -364,7 +388,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     //dumpa o resto do buffer
     if (count!=0){
 
-    sprintf (nome, "%d.bin",var);
+    snprintf (nome,30, "%d.bin",var);
       var++;  
     
     output = fopen(nome,"w");
@@ -388,7 +412,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     fclose(output);
     fclose(file);
-    free(nome);
+    //free(nome);
 
     
     //remove(arquivoEntrada);
