@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     
     OrdeneExterno();
     
-    //printf("%c",103);
+    //printf("%d",5000000000);
     
    return (EXIT_SUCCESS);
 }

@@ -10,7 +10,7 @@
 
 
 //262144
-#define REGISTROS 260000
+#define REGISTROS 262144
 #define ARQ_ENTRADA "entrada20"
 
 typedef FILE* ArqEntradaTipo;
@@ -270,7 +270,7 @@ ArqEntradaTipo abreArquivo(char* fileName){
 }
 
 void OrdeneExterno(){
-    int OrdemIntercalacao=2;
+    int OrdemIntercalacao=4;    //*************************************************
     
     int NBlocos = 0;
     
@@ -330,7 +330,7 @@ void OrdeneExterno(){
         for(i= Low; i <= Lim; i++){
             
             fclose(ArrArqEnt[count]);
-            deletaArquivos(i);
+            //deletaArquivos(i);
             count++;
 
        } 
@@ -383,6 +383,9 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
            fwrite(vet,sizeof(Registro32),count,output);//escreve todo o vetor de uma vez no arquivo
            
            fclose(output);
+           
+           FILE* output;
+           
            output = fopen(nome,"r");
            fread(vet,sizeof(Registro32),count,output);
            int i = 0;
