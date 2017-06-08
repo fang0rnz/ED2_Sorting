@@ -13,8 +13,8 @@ extern "C" {
 typedef FILE* ArqEntradaTipo;
 
 typedef struct {
-    char conteudo[31];
-    char chave;
+    char conteudo[28];
+    int chave;
 }Registro32;
 
 int EnchePaginas(int a,ArqEntradaTipo b);

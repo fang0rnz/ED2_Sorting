@@ -9,9 +9,9 @@
 //#define NREGISTERS(x)  (sizeof(x) / 32)
 
 
-
-#define REGISTROS 3
-#define ARQ_ENTRADA "arquivoentrada.txt"
+//262144
+#define REGISTROS 260000
+#define ARQ_ENTRADA "entrada20"
 
 typedef FILE* ArqEntradaTipo;
 
@@ -50,14 +50,14 @@ void DescarregaPaginas(ArqEntradaTipo arq){
 }
 
 void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
-    printf("\n NA FUNCAO ABREARQUIVO, LOW FOI ENTREGUE COMO %d E LIM COMO %d", low, lim);
+    //printf("\n NA FUNCAO ABREARQUIVO, LOW FOI ENTREGUE COMO %d E LIM COMO %d", low, lim);
     int i;
     char nome[100];
     ArqEntradaTipo arquivo;
     int count = 0;
     for (i=low; i<=lim; i++){
         snprintf (nome, 100, "%d.bin", i);
-        printf("\n%s aberto", nome);
+        //printf("\n%s aberto", nome);
         arquivo = fopen(nome, "r");
         ar[count] = arquivo;
         count++;   
@@ -65,45 +65,50 @@ void AbreArqEntrada(ArqEntradaTipo* ar, int low,int lim){
 }
 void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     int vectorsize = b-a+1, i;
-    printf("\nIntercaleGeral vectorsize: %d", vectorsize);
+    //printf("\nIntercaleGeral vectorsize: %d", vectorsize);
     Registro32 auxvector[vectorsize];
     Registro32 regmin;
-    regmin.chave = CHAR_MAX;
+    //regmin.chave = CHAR_MAX;
+    regmin.chave = INT_MAX;
     int intmin;
     
     for (i=0; i<vectorsize; i++){   //Setta todas as chaves do vetor auxiliar para o minimo
-        auxvector[i].chave = CHAR_MIN;
+        //auxvector[i].chave = CHAR_MIN;
+        auxvector[i].chave = INT_MIN;
     }
     
-    char aux = CHAR_MAX;
+    //char aux = CHAR_MAX;
+    int aux = INT_MAX;
     for (i=0; i<vectorsize; i++){
         fread(&auxvector[i], sizeof(Registro32), 1, entry[i]);
-        printf("\nregistro minimo eh %c e o da vez eh %c", regmin.chave, auxvector[i].chave);
+        //printf("\nregistro minimo eh %c e o da vez eh %c", regmin.chave, auxvector[i].chave);
         if (auxvector[i].chave<regmin.chave){
             regmin = auxvector[i];
             intmin = i;
         }
-        printf("\n o menor registro eh %c, no arquivo[%d]", regmin.chave, intmin);
+        //printf("\n o menor registro eh %c, no arquivo[%d]", regmin.chave, intmin);
     }
     
     int allUnread = 1;
     int contsaida = 0;
     do{
-        printf("\nEscrevendo registro %c do arquivo [%d] na posicao [%d] do vetor saida", regmin.chave,intmin, contsaida++);        
-        if (regmin.chave != CHAR_MAX) //better safe than sorry
+        //printf("\nEscrevendo registro %c do arquivo [%d] na posicao [%d] do vetor saida", regmin.chave,intmin, contsaida++);        
+        //if (regmin.chave != CHAR_MAX) //better safe than sorry
+        if (regmin.chave != INT_MAX) //better safe than sorry
             fwrite(&regmin, sizeof(Registro32), 1, exitfile);
-        printf("\nSubstituindo registro %c por ", auxvector[intmin].chave);
+        //printf("\nSubstituindo registro %c por ", auxvector[intmin].chave);
         fread(&auxvector[intmin], sizeof(Registro32), 1, entry[intmin]);
         if (feof(entry[intmin])){
-            auxvector[intmin].chave = CHAR_MAX;
+            //auxvector[intmin].chave = CHAR_MAX;
+            auxvector[intmin].chave = INT_MAX;
         }
-        printf("%c na posicao %d do vetor auxiliar", auxvector[intmin].chave, intmin);
+        //printf("%c na posicao %d do vetor auxiliar", auxvector[intmin].chave, intmin);
 //        if (feof(entry[intmin])){
 //            auxvector[intmin].chave = CHAR_MAX;
 //        }
         
             intmin = MinIndex(auxvector, vectorsize);
-            printf("\nNOVO INTMIN VALE %d", intmin );
+//            printf("\nNOVO INTMIN VALE %d", intmin );
             regmin = auxvector[intmin];
 
 
@@ -113,21 +118,21 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
         for (i=0; i<vectorsize; i++){ //verifica se ja leu ate o final de todos os arquivos
             if (feof(entry[i])){
                 count++;
-                printf("\nO arquivo de indice [%d] foi lido completamente.", i);
+//                printf("\nO arquivo de indice [%d] foi lido completamente.", i);
             }
         }
-        printf("\n Quantidade de arquivos que foram lidos completamente: %d", count);
+//        printf("\n Quantidade de arquivos que foram lidos completamente: %d", count);
         
         if (count==vectorsize)
             allUnread = 0;
             
     }while (allUnread);
     
-           printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
+//           printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
        rewind(exitfile);
       while(!feof(exitfile)){
            Registro32 reg;
-           printf("%c ", reg.chave);
+//           printf("%c ", reg.chave);
            fread(&reg, sizeof(Registro32), 1, exitfile);
       }
     
@@ -151,16 +156,17 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
 int MinIndex (Registro32* entry, int vectorsize){
     int i;
     int menor;
-    char aux = CHAR_MAX;
+    //char aux = CHAR_MAX;
+    int aux = INT_MAX;
     for (i=0; i<vectorsize; i++){
-        printf("\nCOMPARANDO %c e %c", entry[i].chave, aux);
+//        printf("\nCOMPARANDO %c e %c", entry[i].chave, aux);
         if (entry[i].chave <= aux){
             
             menor = i;
             aux = entry[i].chave;
             
         }
-        printf("\nO MENOR EH %c DE INDICE %d.", aux, menor);
+//        printf("\nO MENOR EH %c DE INDICE %d.", aux, menor);
     }
     return menor;
 }
@@ -171,7 +177,7 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
        int turnA = 1;
        int turnB = 1;
        int exit = 0;
-       printf("\n***%d***\n", b-a+1);
+//       printf("\n***%d***\n", b-a+1);
 //       int fimA = feof(entry[b]);
 //       int fimB = feof(entry[b]);
        while (!(feof(entry[0]) && feof(entry[1]))){
@@ -182,7 +188,8 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
             if (feof(entry[0]) ){
 //                printf("\nentrou1\n");
 //                fread(&reg1, sizeof(Registro32), 1, entry[b]);
-                reg1.chave = CHAR_MAX;
+                //reg1.chave = CHAR_MAX;
+                reg1.chave = INT_MAX;
             }
            }
            if(turnB){
@@ -190,24 +197,26 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
                 if (feof(entry[1])){
 //                    fread(&reg2, sizeof(Registro32), 1, entry[a]);
 //                    printf("\nentrou\n");
-                    reg2.chave = CHAR_MAX;
+                    //reg2.chave = CHAR_MAX;
+                    reg2.chave = INT_MAX;
                 }
            }
-           printf("\nCOMPARANDO %c & %c", reg1.chave, reg2.chave);
+//           printf("\nCOMPARANDO %c & %c", reg1.chave, reg2.chave);
            exitreg = MinimoReg32(reg1, reg2, &turnA, &turnB);
            
-           printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
-           if (exitreg.chave != CHAR_MAX)
+//           printf("\n turnA eh %d e turnB eh %d", turnA, turnB);
+           //if (exitreg.chave != CHAR_MAX)
+           if (exitreg.chave != INT_MAX)
             fwrite(&exitreg, sizeof(Registro32), 1, exitfile);
 //                      fimA = feof(entry[a]);
 //           fimB = feof(entry[b]);
-           printf("\nMENOR CHAVE eh %c", exitreg.chave);
+//           printf("\nMENOR CHAVE eh %c", exitreg.chave);
        }
-       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
+//       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
        rewind(exitfile);
       while(!feof(exitfile)){
            Registro32 reg;
-           printf("%c ", reg.chave);
+//           printf("%c ", reg.chave);
            fread(&reg, sizeof(Registro32), 1, exitfile);
            
            
@@ -281,7 +290,7 @@ void OrdeneExterno(){
     
     
     Low = 0;
-    printf ("%d", NBlocos);
+//    printf ("%d", NBlocos);
     High = NBlocos-1;
     Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
@@ -304,15 +313,15 @@ void OrdeneExterno(){
         
           
        Lim = Minimo(Low + OrdemIntercalacao -1, High);
-        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
+//        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
        AbreArqEntrada(ArrArqEnt, Low, Lim); //abre array de n arquivos, sendo o primeiro low, 
-        printf ("\nDepois AbreArqEnt low=%d, lim=%d, high=%d\n", Low, Lim, High);
+//        printf ("\nDepois AbreArqEnt low=%d, lim=%d, high=%d\n", Low, Lim, High);
        High++;
     
        ArqSaida = AbreArqSaida(High);
 
    
-       printf ("\nIntercale sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
+//       printf ("\nIntercale sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
         IntercaleGeral(ArrArqEnt, Low, Lim, ArqSaida);
     
         fclose(ArqSaida);
@@ -349,7 +358,7 @@ int comparaRegistro32(const void* a, const void* b){
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
-    char a;
+    int a;
     Registro32 vet[numeroRegistros];
     int count=0;
     
@@ -360,7 +369,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     
     while(!feof(file)){
-       fscanf(file,"%c ",&a);//ignora o \n no final\n
+       fscanf(file,"%d ",&a);//ignora o \n no final\n
        vet[count].chave=a;
        count++;
        
@@ -378,10 +387,10 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
            fread(vet,sizeof(Registro32),count,output);
            int i = 0;
            for(i=0;i<count;i++)
-           printf("%c",vet[i].chave);
+//           printf("%c",vet[i].chave);
            count=0;
            var++;   //seta var sempre o proximo registro de arquivo
-           printf("\n");
+//           printf("\n");
        }
     }
     
@@ -400,7 +409,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     fwrite(vet,sizeof(Registro32),count,output);
         int i;
         for (i = 0; i < count; i++) {
-            printf("%c",vet[i].chave);
+//            printf("%c",vet[i].chave);
         }
         //putc(a,output);
 
