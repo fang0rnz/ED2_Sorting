@@ -7,7 +7,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <math.h>
 #include "ordena.h"
+#include "utils.h"
 /*
  * 
  */
@@ -17,12 +20,13 @@ int compare (const void * a, const void * b)
 }
 
 int main(int argc, char** argv) {
+    tic = clock();//inicia a contagem do tempo
 
+    //OrdeneExterno();
     
-    OrdeneExterno();
+    elapsedTime();
     
-    //printf("%d",5000000000);
-    
+
    return (EXIT_SUCCESS);
 }
 

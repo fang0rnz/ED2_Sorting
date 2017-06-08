@@ -10,8 +10,9 @@
 
 
 //262144
-#define REGISTROS 262144
-#define ARQ_ENTRADA "entrada20"
+#define REGISTROS 4096
+#define INTERCALACOES 2
+#define ARQ_ENTRADA "random"
 
 typedef FILE* ArqEntradaTipo;
 
@@ -39,7 +40,7 @@ void deletaArquivos(int a){
     flag = remove(nome);
     
     if(flag==0){
-        printf("arquivo deletado com sucesso!");
+        //printf("arquivo deletado com sucesso!");
     }else{
         printf("erro ao deletar o arquivo.");
     }
@@ -270,7 +271,7 @@ ArqEntradaTipo abreArquivo(char* fileName){
 }
 
 void OrdeneExterno(){
-    int OrdemIntercalacao=4;    //*************************************************
+    int OrdemIntercalacao=INTERCALACOES;    //*************************************************
     
     int NBlocos = 0;
     
@@ -330,7 +331,7 @@ void OrdeneExterno(){
         for(i= Low; i <= Lim; i++){
             
             fclose(ArrArqEnt[count]);
-            //deletaArquivos(i);
+            deletaArquivos(i);
             count++;
 
        } 
