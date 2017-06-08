@@ -10,9 +10,9 @@
 
 
 //262144
-#define REGISTROS 4096
-#define INTERCALACOES 2
-#define ARQ_ENTRADA "random"
+#define REGISTROS (pow(2,20)/4)
+#define INTERCALACOES 4
+#define ARQ_ENTRADA "entrada20"
 
 typedef FILE* ArqEntradaTipo;
 
@@ -281,7 +281,7 @@ void OrdeneExterno(){
     
     ArqEntradaTipo ArrArqEnt[OrdemIntercalacao];
     
-    short Fim;
+    
     
     int Low, High, Lim;
     
@@ -360,14 +360,20 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
     int a;
-    Registro32 vet[numeroRegistros];
+    //Registro32 vet[numeroRegistros];
+    Registro32 *vet = malloc(numeroRegistros*sizeof(Registro32));
     int count=0;
-    
+    printf("passa no register de boas\n");
     int var = 0;  //var = numero pra referencia no arquivo
     
     //char* nome = malloc  (sizeof (char)*30);
     char nome[30];
     
+    printf("antes da leitura do arquivo\n");
+    
+    if(file==NULL){
+        printf("maoeeee\n");
+    }
     
     while(!feof(file)){
        fscanf(file,"%d ",&a);//ignora o \n no final\n
@@ -425,7 +431,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     
     fclose(output);
     fclose(file);
-    //free(nome);
+    free(vet);
 
     
     //remove(arquivoEntrada);
