@@ -271,17 +271,12 @@ ArqEntradaTipo abreArquivo(char* fileName){
 }
 
 void OrdeneExterno(){
-    int OrdemIntercalacao=INTERCALACOES;    //*************************************************
-    
+    int OrdemIntercalacao=INTERCALACOES;    
     int NBlocos = 0;
-    
     int i;
     
     ArqEntradaTipo ArqEntrada, ArqSaida;
-    
     ArqEntradaTipo ArrArqEnt[OrdemIntercalacao];
-    
-    
     
     int Low, High, Lim;
     
@@ -294,21 +289,6 @@ void OrdeneExterno(){
 //    printf ("%d", NBlocos);
     High = NBlocos-1;
     Lim = Minimo(Low + OrdemIntercalacao -1, High);
-    
-//    AbreArqEntrada(ArrArqEnt, Low, Lim);
-//    ArqSaida = AbreArqSaida(High+1);
-//        Registro32* reg;
-//        reg = (Registro32 *) malloc(sizeof(Registro32)*3);
-//        fread(reg, sizeof(Registro32), 3, ArrArqEnt[0]);
-//        printf("\nPrimeira chave do arquivo eh %c", reg[0].chave);
-//        printf("\n ArrArqEnt tem %d elementos no vetor", NELEMS(ArrArqEnt));
-//        free(reg);
-//        fseek(ArrArqEnt[0], 0, SEEK_END); // seek to end of file
-//        int size = ftell(ArrArqEnt[0]); // get current file pointer
-//        rewind(ArrArqEnt[0]); // seek back to beginning of file
-//        printf("\n size is %d bytes", size);
-//        IntercaleGeral(ArrArqEnt, Low, Lim, ArqSaida);
-//    
     
     while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
         
@@ -336,17 +316,17 @@ void OrdeneExterno(){
 
        } 
 
-       //Apague_Arquivo(ArrArqEnt[i]);
+    
     
     Low += OrdemIntercalacao;
     
     }
     
-    //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
+    
 
 }
 
-//nao manipula ponteiro
+
 int comparaRegistro32(const void* a, const void* b){
     Registro32 a1;
     Registro32 b1;
@@ -355,7 +335,7 @@ int comparaRegistro32(const void* a, const void* b){
     return a1.chave-b1.chave;
 }
 
-//abre 2 arquivos e fecha os dois
+
 void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     FILE* file = abreArquivo(arquivoEntrada);
     FILE* output;
@@ -366,7 +346,7 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     printf("passa no register de boas\n");
     int var = 0;  //var = numero pra referencia no arquivo
     
-    //char* nome = malloc  (sizeof (char)*30);
+
     char nome[30];
     
     printf("antes da leitura do arquivo\n");
