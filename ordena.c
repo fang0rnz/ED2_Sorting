@@ -10,9 +10,9 @@
 
 
 //262144
-#define REGISTROS (pow(2,20)/4)
+#define REGISTROS 16384
 #define INTERCALACOES 4
-#define ARQ_ENTRADA "entrada20"
+#define ARQ_ENTRADA "entrada22"
 
 typedef FILE* ArqEntradaTipo;
 
@@ -130,7 +130,6 @@ void IntercaleGeral(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
     }while (allUnread);
     
 //           printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
-       rewind(exitfile);
       while(!feof(exitfile)){
            Registro32 reg;
 //           printf("%c ", reg.chave);
@@ -214,17 +213,7 @@ void Intercale(ArqEntradaTipo* entry,int a,int b,ArqEntradaTipo exitfile){
 //           printf("\nMENOR CHAVE eh %c", exitreg.chave);
        }
 //       printf("\nCHAVES DENTRO DO ARQUIVO DE SAIDA:");
-       rewind(exitfile);
-      while(!feof(exitfile)){
-           Registro32 reg;
-//           printf("%c ", reg.chave);
-           fread(&reg, sizeof(Registro32), 1, exitfile);
-           
-           
-           
-       } 
- 
-       
+
        
        
 }
@@ -283,7 +272,7 @@ void OrdeneExterno(){
     NBlocos = 0;
     
     segregaArquivos(ARQ_ENTRADA, REGISTROS, &NBlocos);
-    
+
     
     Low = 0;
 //    printf ("%d", NBlocos);
@@ -291,7 +280,7 @@ void OrdeneExterno(){
     Lim = Minimo(Low + OrdemIntercalacao -1, High);
     
     while (Low < High){ /* Intercalacao dos NBlocos ordenados */ 
-        
+       
           
        Lim = Minimo(Low + OrdemIntercalacao -1, High);
 //        printf ("\nAbreArqEntrada sendo chamado com low=%d, lim=%d, high=%d\n", Low, Lim, High);
@@ -343,14 +332,12 @@ void segregaArquivos(char* arquivoEntrada,int numeroRegistros, int *NBlocos){
     //Registro32 vet[numeroRegistros];
     Registro32 *vet = malloc(numeroRegistros*sizeof(Registro32));
     int count=0;
-    printf("passa no register de boas\n");
     int var = 0;  //var = numero pra referencia no arquivo
     
 
     char nome[30];
     
-    printf("antes da leitura do arquivo\n");
-    
+ 
     if(file==NULL){
         printf("maoeeee\n");
     }

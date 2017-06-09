@@ -26,20 +26,21 @@ int main(int argc, char** argv) {
     struct timeval inicio;
     struct timeval final;
    
-    
-    
+    int i= 0;
+    double total = 0.0;
+    double tempoSeconds = 0.0;
+ 
     gettimeofday(&inicio, NULL);
     
-//    tic = clock();//inicia a contagem do tempo
+
     OrdeneExterno();
-//    elapsedTime();
+
     
     gettimeofday(&final, NULL);
     
     
-    double tempoSeconds = final.tv_sec - inicio.tv_sec + ((final.tv_usec - inicio.tv_usec)/1000000.0); 
-    printf("\n tempo jordao: %lf", tempoSeconds);
-    
+    tempoSeconds = final.tv_sec - inicio.tv_sec + ((final.tv_usec - inicio.tv_usec)/1000000.0); 
+    printf("\nExecucao em: %lf segundos", tempoSeconds);
    return (EXIT_SUCCESS);
 }
 
